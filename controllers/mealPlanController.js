@@ -31,7 +31,7 @@ exports.index = async (req, res) => {
     const recipes = await Recipe.find(Recipe.visibleTo(visitorId)).sort({title: 1})
 
     // Render the meal plan page with the plan and recipes
-    res.render('mealPlans/index', {plan, recipes, days:Days})
+    res.render('mealplans/index', {plan, recipes, days:Days})
 }
 
 // Add: Drop a recipe to a day in the meal plan
