@@ -1,0 +1,122 @@
+<% layout('layouts/boilerplate') %>
+
+<h1 class="text-3x1 font-bold mb-2">Shopping List</h1>
+<p class="text-slate-500 text-sm mb-6">
+    Pick the recipes you're using to cook - for your total quantity of ingredients
+</p>
+
+<div class="grid grid-cols-1 lg:gird-cols-3 gap-6">
+
+    <!-- Recipe Check List -->
+    <aside class="lg:col-span-1">
+        <form action="/shopping/generate" method="POST"
+            class="bg-white dark:bg-slate-800 rounded-2x1 p-5 shadow-sm">
+            <h2 class="font-semibold mb-4">Select Recipes</h2>
+
+            <div class="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
+                <% recipes.forEach(recipe => { %>
+                    <label class="flex items.center gap-3 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                        <!-- The user click the checkboxes to choose recipes he/she wants keep the selectedrecipeIds(recipes) checked
+                          after generating the total quantity of ingredients you have -->
+                        <input
+                            type="checkbox"
+                            name="recipeIds"
+                            value="<%= recipe._id %>"
+                            <%= selectedIds.includes(recipe._id.toString()) ? 'checked' : '' %>
+                            class="w-4 h-4 accent-brand-600"
+                        />
+                        <img src="<%= recipe.imageUrl %>" alt=""
+                            class="w-10 h-10 rounded-md object-cover"
+                        />
+                        <span class="text-sm truncate"><%= recipe.title %></span>
+                    </label>
+                <% }) %>
+
+                <!-- If there were recipe checkbox checked, give the user the statement in the paragraph -->
+                <% if (recipes.length === 0) { %>
+                    <p class="text-sm text-slate-500">No Recipes yet</p>
+                <% } %>
+            </div>
+
+            <button type="submit"
+                class="mt-4 w-full bg-brand-600 hover:bg-brand-700 text-white py-2.5 rounded-lg font-medium">
+                Generate List
+            </button>
+        </form>
+    </aside>
+
+    <!-- Generated List -->
+    <section class="lg:col-span-2">
+        <% if (!list) { %>
+            <!-- Empty state-->
+            <div class="bg-white dark:bg-slate-800 rounded-2xl p-10 shadow-sm text-center">
+                <p class="text-5x1 mb-3">Select recipes and click Generate to see your merged shopping list.</p>
+            </div>
+
+            <!-- Your list has already been generated and the quantity has been calculated -->
+        <% } else { %>
+            <div class="bg-white dark:bg-slate-800 rounded-2x1 p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-lg font-semibold">
+                        Your List <span class="text-sm text-slate-500 font-normal">(<%= list.length %> items)</span>
+                    </h2>
+                    <div class="flex gap-2">
+                        <button id="copy-list" type="button"
+                                class="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg border border-slate-300 text-slate-700 dark:border-slate-600 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                            <span aria-hidden="true">📋</span>
+                            Copy
+                        </button>
+                        <button onclick="window.print()" type="button"
+                                class="inline-flex items-center gap-2 text-sm px-3 py-1.5 rounded-lg border border-slate-300 text-slate-700 dark:border-slate-600 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+                            <span aria-hidden="true">🖨️</span>
+                            Print
+                        </button>
+                    </div>
+                </div>
+
+                <!-- If there's no list of recipes(ingredients), tell the user there's no ingredients to show -->
+                <% if (list.length === 0) { %>
+                    <p class="text-slate-500 text-sm">No ingredients to show</p>
+                <% } else { %>
+                    <ul id="shopping-items" class="space-y-2">
+                        <% list.forEach(item => { %>
+                            <li class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-700 pb-2">
+                                <input type="checkbox" class="w-4 h-4 accent-brand-600"/>
+                                <span class="flex-1"><%= item.name %></span>
+                                <span class="text-slate-500 text-sm">
+                                    <%= item.total %> <%= item.unit %>
+                                </span>
+                            </li>
+                        <% }) %>
+                    </ul>
+                <% } %>
+            </div>
+        <% } %>
+    </section>
+</div>
+
+<!-- Copy-to-clipboard script-->
+<!-- Activating the copy-to-clipboard button and the copy button changes to 'copied' after clicking it -->
+<script>
+    // if the html element with the id is present? activate the button
+    document.getElementById('copy-list')?.addEventListener('click', async (event) => {
+        // Put all the list items in array, so we could each list items without large spaces in between
+        const items = [...document.querySelectorAll('#shopping-items li')]
+        /*return each list item with just one space in between them by removing 
+        each space globally in-between them and also remove leading/trailing spaces */
+        .map(li => li.textContent.replace(/\s+/g, ' ').trim())
+        // join each of the list item using a new line
+        .join('\n')
+
+        // Copy it to clipboard(Writing the list items exactly the same way on clipboard)
+        const btn = event.currentTarget
+        const old = btn.textContent
+        try {
+            await navigator.clipboard.writeText(items)
+            btn.textContent = 'Copied!✅'
+        } catch (error) {
+            btn.textContent = 'Copy failed'
+        }
+        setTimeout(() => btn.textContent = old, 1500)
+    })
+</script>

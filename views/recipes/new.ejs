@@ -1,0 +1,11 @@
+<!-- Import boilerplate for the add Recipe ejs template -->
+<% layout('layouts/boilerplate') %>
+<h1 class="text-3x1 font-bold mb-6">Add a Recipe</h1>
+
+<!-- Add the recipe form -->
+<%- include('../partials/recipeForm', { 
+    action: '/recipes',
+    method: null,
+    submitLabel: 'Create Recipe',
+    recipe: {} 
+}) %>

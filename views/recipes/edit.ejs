@@ -1,0 +1,11 @@
+<!-- Import boilerplate for the editRecipe ejs template -->
+<% layout('layouts/boilerplate') %>
+<h1 class="text-3x1 font-bold mb-6">Edit Recipe</h1>
+
+<!-- Add the recipe form -->
+<%- include('../partials/recipeForm', { 
+    action: '/recipes/' + recipe._id + '?_method=PUT',
+    method: 'PUT',
+    submitLabel: 'Update Recipe',
+    recipe 
+}) %>

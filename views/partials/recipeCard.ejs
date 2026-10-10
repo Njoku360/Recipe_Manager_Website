@@ -1,0 +1,41 @@
+<article class="group rounded-2x1 overflow-hidden bg-white dark:bg-slate-800 shadow-lg transition">
+    <a href="/recipes/<%= recipe._id %>">
+        <img
+            src="<%= recipe.imageUrl %>"
+            alt="<%= recipe.title %>"
+            class="aspect-video w-full object-cover group-hover:scale-105 transition duration-300"
+            loading="lazy"
+        />
+    </a>
+    <div class="p-4">
+        <p class="text-xs text-slate-500 mb-1">
+            <%= recipe.isDemo ? 'Demo recipe' : recipe.ownerVisitorId ? 'Your recipe' : 'Shared recipe' %>
+        </p>
+        <h3 class="font-semibold text-lg truncate">
+            <a href="/recipes/<%=recipe._id %>" class="hover:text-brand-600">
+                <%= recipe.title %>
+            </a>
+        </h3>
+
+        <p class="text-sm text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+            <%= recipe.description || 'No Description' %>
+        </p>
+
+        <div class="flex items-center justify-between mt-3 text-xs text-slate-500">
+            <span><%= recipe.totalTime %> min</span>
+            <span><%= recipe.servings %> servings</span>
+        </div>
+
+        <!-- If the tag exists, It should get that styling property -->
+        <% if (recipe.tags && recipe.tags.length) { %>
+            <div class="flex flex-wrap gap-1.5 mt-3">
+                <% recipe.tags.forEach(tag => { %>
+                    <a href="/recipes?tag=<%= tag %>"
+                        class="rounded-full bg-brand-50 text-brand-700 text-xs px-2 py-0.5 hover:bg-brand-100 dark:bg-slate-700 dark:text-brand-300">
+                        <%= tag %>
+                    </a>
+                <% }) %>
+            </div>
+        <% } %> 
+    </div>
+</article>

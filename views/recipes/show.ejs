@@ -1,0 +1,109 @@
+<% layout('layouts/boilerplate') %>
+
+<!-- Back link(Index Page) -->
+<a href="/recipes" class="text-sm text-slate-500 hover:text-brand-600"> Back To Recipes</a>
+
+<!--Image of the Recipe-->
+<div class="mt-4 rounded-2xl overflow-hidden">
+    <img src="<%= recipe.imageUrl %>" alt="<%= recipe.title %>"
+        class="w-full aspect-[16/9] object-cover" />
+</div>
+
+<!-- Header -->
+<div class="flex items-start justify-between mt-6 gap-4">
+    <div>
+        <h1 class="text-3xl font-bold"><%= recipe.title %></h1>
+        <p class="text-slate-600 dark:text-slate-400 mt-2"><%= recipe.description %></p>
+    </div>
+
+    <% if (recipe.isOwnedBy(visitorId)) { %>
+    <div class="flex gap-2 shrink-0">
+        <a href="/recipes/<%=recipe._id %>/edit"
+            class="px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 text-sm">
+            Edit
+        </a>
+        <!-- Used For a Deleting a Recipe -->
+        <form action="/recipes/<%= recipe._id %>?_method=DELETE" method="POST"
+            onsubmit="return confirm('Delete this recipe?')">
+            <button class="px-3 py-1.5 rounded-lg bg-red-500 hover:bg-red-600 text-white text-sm">
+                Delete
+            </button>
+        </form>
+    </div>
+    <% } %>
+</div>
+
+<!-- Data Row-->
+<div class="flex flex-wrap gap-4 mt-4 text-sm text-slate-600 dark:text-slate-400">
+    <span> Prep: <%= recipe.prepTime %> min</span>
+    <span> Cooking: <%= recipe.cookTime %> min</span>
+    <span> Total: <%= recipe.totalTime %> min</span>
+</div>
+
+<!-- Tags -->
+<% if (recipe.tags && recipe.tags.length) { %>
+    <div class="flex flex-wrap gap-2 mt-4">
+        <% recipe.tags.forEach(t => { %>
+            <a href="/recipes?tag=<%= t %>"
+                class="rounded-full bg-brand-50 text-brand-700 text-xs px-3 py-1 hover:bg-brand-100 dark:bg-slate-700 dark:text-slate-300">
+                <%= t %>
+            </a>
+        <% }) %>
+    </div>
+<% } %>
+
+<!-- Two-column: Ingredients + steps -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+    <!-- Ingredients side bar-->
+    <aside class="lg:col-span-1">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm sticky top-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold">Ingredients</h2>
+
+                <!-- Servings scaler-->
+                <div class="lg:col-span-1">
+                    <label for="servings" class="text-slate-500">Servings:</label>
+                    <input
+                        type="number"
+                        id="servings"
+                        value="<%= recipe.servings %>"
+                        min="1"
+                        data-base="<%= recipe.servings %>"
+                        class="w-16 px-2 py-1 rounded-lg border border-slate-300 dark:border-slate-600
+                            bg-white dark:bg-slate-900 text-center"
+                    />
+                </div>
+            </div>
+            <ul class="space-y-2 text-sm">
+                <%recipe.ingredients.forEach(ingred => { %>
+                    <li class="flex justify-between border-b border-slate-100 dark:border-slate-700 pb-1.5">
+                        <span><%= ingred.name %></span>
+                        <span class="text-slate-500">
+                            <span data.qty="<%= ingred.quantity %>"><%= ingred.quantity %></span>
+                            <%= ingred.unit %>
+                        </span>
+                    </li>
+                <% }) %>
+            </ul>
+        </div>
+    </aside>
+    
+    <!-- Steps -->
+    <section>
+        <h2 class="text-lg font-semibold mb-4">Instructions</h2>
+        <ol class="space-y-4">
+            <% recipe.steps.sort((a, b) => a.order - b.order).forEach(step => { %>
+                <li class="flex gap-4">
+                    <span class="shrink-0 w-8 h-8 rounded-full bg-brand-600 text-white
+                        flex items-center justify-center font-semibold text-sm">
+                        <%= step.order %>
+                    </span>
+                    <p class="pt-1.5"><%= step.text %></p>
+                </li>
+            <% }) %>
+        </ol>
+    </section>
+</div>
+
+<!-- Servings scaler script -->
+<script src="/js/scaler.js" defer></script>
