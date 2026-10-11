@@ -15,7 +15,7 @@
 
             <div class="space-y-2 max-h-[60vh] overflow-y-auto pr-1">
                 <% recipes.forEach(recipe => { %>
-                    <label class="flex items.center gap-3 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                    <label class="flex min-w-0 items-center gap-3 p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
                         <!-- The user click the checkboxes to choose recipes he/she wants keep the selectedrecipeIds(recipes) checked
                           after generating the total quantity of ingredients you have -->
                         <input
@@ -28,7 +28,7 @@
                         <img src="<%= recipe.imageUrl %>" alt=""
                             class="w-10 h-10 rounded-md object-cover"
                         />
-                        <span class="text-sm truncate"><%= recipe.title %></span>
+                        <span class="min-w-0 text-sm truncate"><%= recipe.title %></span>
                     </label>
                 <% }) %>
 
@@ -56,7 +56,7 @@
             <!-- Your list has already been generated and the quantity has been calculated -->
         <% } else { %>
             <div class="bg-white dark:bg-slate-800 rounded-2x1 p-6 shadow-sm">
-                <div class="flex items-center justify-between mb-5">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
                     <h2 class="text-lg font-semibold">
                         Your List <span class="text-sm text-slate-500 font-normal">(<%= list.length %> items)</span>
                     </h2>
@@ -82,8 +82,8 @@
                         <% list.forEach(item => { %>
                             <li class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-700 pb-2">
                                 <input type="checkbox" class="w-4 h-4 accent-brand-600"/>
-                                <span class="flex-1"><%= item.name %></span>
-                                <span class="text-slate-500 text-sm">
+                                <span class="min-w-0 flex-1 break-words"><%= item.name %></span>
+                                <span class="shrink-0 text-slate-500 text-sm">
                                     <%= item.total %> <%= item.unit %>
                                 </span>
                             </li>

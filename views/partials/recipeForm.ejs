@@ -93,22 +93,22 @@
         <div id="ingredients-list" class="space-y-2">
             <% const ingreds = recipe.ingredients && recipe.ingredients.length ? recipe.ingredients: [{ name:'', quantity:'', unit:'g' }] %>
             <% ingreds.forEach((ing, index) => { %>
-                <div class="flex gap-2 ingredient-row" data-index="<%= index %>">
+                <div class="flex flex-wrap sm:flex-nowrap gap-2 ingredient-row" data-index="<%= index %>">
                     <input type="text" name="ingredients[<%= index %>][name]" placeholder="Ingredient Name"
                         value="<%= ing.name %>"
-                        class="flex-1 px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600
+                        class="min-w-0 w-full sm:flex-1 px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600
                             bg-white dark:bg-slate-900
                         "
                     />
                     <input type="number" name="ingredients[<%= index %>][quantity]" min="0" step="any"
                         value="<%= ing.quantity %>"
                         placeholder="Quantity"
-                        class="w-24 px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600
+                        class="w-20 shrink-0 px-2 py-2 rounded-lg border border-slate-300 dark:border-slate-600
                             bg-white dark:bg-slate-900
                         "
                     />
                     <select name="ingredients[<%= index %>][unit]"
-                        class="w-24 px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600
+                        class="w-20 shrink-0 px-2 py-2 rounded-lg border border-slate-300 dark:border-slate-600
                             bg-white dark:bg-slate-900
                         "
                     >
@@ -133,12 +133,12 @@
         <div id="steps-list" class="space-y-3">
             <% const steps = recipe.steps && recipe.steps.length ? recipe.steps : [{ text: '' }] %>
             <% steps.forEach((step, index) => { %>
-                <div class="step-row flex gap-2 items-start" data-index="<%= index %>">
+                <div class="step-row flex min-w-0 gap-2 items-start" data-index="<%= index %>">
                     <div class="flex h-9 w-9 items-center justify-center rounded-full bg-brand-100 text-brand-700 font-semibold step-number">
                         <%= index + 1 %>
                     </div>
                     <textarea name="steps[<%= index %>][text]" rows="2" placeholder="Describe this step"
-                        class="flex-1 px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900"
+                        class="min-w-0 flex-1 px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900"
                     ><%= step.text || '' %></textarea>
                     <button type="button" class="remove-step px-3 text-red-500 hover:text-red-700">Remove</button>
                 </div>
